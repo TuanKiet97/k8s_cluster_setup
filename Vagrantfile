@@ -3,7 +3,6 @@ Vagrant.configure("2") do |config|
       apt-get update -y
       echo "10.0.0.10  master-node" >> /etc/hosts
       echo "10.0.0.11  worker-node01" >> /etc/hosts
-      echo "10.0.0.12  worker-node02" >> /etc/hosts
   SHELL
   
   config.vm.define "master" do |master|

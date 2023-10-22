@@ -38,7 +38,17 @@ net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 EOF
 
+# Apply sysctl params without reboot
 sudo sysctl --system
+
+# Verify the module are loaded :
+lsmod | grep br_netfilter
+lsmod | grep overlay
+
+# Check network config
+echo "Checking the configuration"
+sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
+
 
 cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
 deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /
@@ -56,7 +66,7 @@ sudo apt-get install cri-o cri-o-runc cri-tools -y
 sudo systemctl daemon-reload
 sudo systemctl enable crio --now
 
-sudo systemctl status crio.service
+# sudo systemctl status crio.service
 
 
 
@@ -74,12 +84,6 @@ sudo apt-get install -y kubelet="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSI
 sudo apt-get update -y
 sudo apt-get install -y jq
 
-# Check version of CLI tool
-kubeadm version
-
-kubectl version
-
-kubelet --version
 
 # Hold CLI tool packages
 sudo apt-mark hold kubelet kubeadm kubectl
